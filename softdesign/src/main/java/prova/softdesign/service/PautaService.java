@@ -47,6 +47,6 @@ public class PautaService implements PautaServiceInterface {
                         pautaRepository.delete(pauta)
                                 .then(Mono.just(ResponseEntity.noContent().<Void>build()))
                 )
-                .defaultIfEmpty(ResponseEntity.noContent().build());
+                .defaultIfEmpty(ResponseEntity.notFound().build());
     }
 }
