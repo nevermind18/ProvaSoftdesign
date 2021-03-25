@@ -1,46 +1,43 @@
 package prova.softdesign.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.reactive.function.server.ServerResponse;
 import prova.softdesign.document.Associado;
-import prova.softdesign.service.AssociadoService;
+import prova.softdesign.interfaces.AssociadoServiceInterface;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 @RestController
+@RequestMapping("/v1/associado")
 public class AssociadoController {
 
     @Autowired
-    AssociadoService associadoService;
+    AssociadoServiceInterface associadoService;
 
     @PostMapping("")
-    public Mono<Associado> cadastrar(@RequestBody Associado associado){
-
+    public Mono<ResponseEntity<Associado>> cadastrar(@RequestBody Associado associado){
         return associadoService.cadastrar(associado);
     }
 
-    @GetMapping("/")
-    public Flux<Associado> buscarTodos(){
-
-        return associadoService.buscarTodos();
-    }
-
     @GetMapping("/{id}")
-    public Mono<Associado> buscarId(@PathVariable String id){
-
+    public Mono<ResponseEntity<Associado>> buscarPorId(@PathVariable String id) {
         return associadoService.buscarPorId(id);
     }
 
-    @PutMapping("/{id}")
-    public Mono<Associado> alterar(@RequestBody Associado associado){
+    @GetMapping("")
+    public Flux<Associado> buscarTodos() {
+        return associadoService.buscarTodos();
+    }
 
+    @PutMapping("")
+    public Mono<ResponseEntity<Associado>> alterar(@RequestBody Associado associado){
         return associadoService.alterar(associado);
     }
 
     @DeleteMapping("/{id}")
-    public void delete(@PathVariable String id){
-
-        associadoService.deletar(id);
+    public Mono<ResponseEntity<Void>> deletar(@PathVariable String id) {
+        return associadoService.deletar(id);
     }
+
 }
