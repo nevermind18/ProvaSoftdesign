@@ -48,6 +48,6 @@ public class AssembleiaService implements AssembleiaServiceInterface {
                         assembreiaRepository.delete(assembleia)
                                 .then(Mono.just(ResponseEntity.noContent().<Void>build()))
                 )
-                .defaultIfEmpty(ResponseEntity.notFound().build());
+                .defaultIfEmpty(ResponseEntity.noContent().build());
     }
 }

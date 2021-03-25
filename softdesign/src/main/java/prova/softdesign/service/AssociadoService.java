@@ -48,6 +48,6 @@ public class AssociadoService implements AssociadoServiceInterface {
                         associadoRepository.delete(associado)
                                 .then(Mono.just(ResponseEntity.noContent().<Void>build()))
                 )
-                .defaultIfEmpty(ResponseEntity.notFound().build());
+                .defaultIfEmpty(ResponseEntity.noContent().build());
     }
 }
