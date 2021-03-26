@@ -5,6 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import prova.softdesign.document.Votacao;
 import prova.softdesign.interfaces.VotacaoServiceInterface;
+import prova.softdesign.repository.PautaRepository;
 import prova.softdesign.repository.VotacaoRepository;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -15,9 +16,18 @@ public class VotacaoService implements VotacaoServiceInterface {
     @Autowired
     VotacaoRepository votacaoRepository;
 
+    @Autowired
+    PautaRepository pautaRepository;
+
     public Mono<ResponseEntity<Votacao>> cadastrar(Votacao votacao){
-        return votacaoRepository.save(votacao)
-                .map(votacao1 -> ResponseEntity.ok(votacao));
+        return pautaRepository.findById(votacao.getPauta().getId())
+                .flatMap(pauta -> {
+                    votacao.setPauta(pauta);
+                    return votacaoRepository.save(votacao)
+                            .map(votacao1 -> ResponseEntity.ok(votacao));
+                }).map(votacao1 -> ResponseEntity.ok(votacao))
+                .defaultIfEmpty(ResponseEntity.notFound().build());
+
     }
 
     public Flux<Votacao> buscarTodos() {
@@ -33,13 +43,25 @@ public class VotacaoService implements VotacaoServiceInterface {
 
     public Mono<ResponseEntity<Votacao>> alterar(Votacao votacao) {
 
-        return votacaoRepository.findById(votacao.getId())
-                .flatMap( votacao1 -> {
-                    return votacaoRepository.save(votacao);
+        return pautaRepository.findById(votacao.getPauta().getId())
+                .flatMap(pauta -> {
+                    votacao.setPauta(pauta);
+                    return votacaoRepository.findById(votacao.getId()).flatMap(
+                            votacao1 -> {
+                                return votacaoRepository.save(votacao);
+                            });
                 })
-                .map(votacao1 -> ResponseEntity.ok(votacao))
+                .map(voto1 -> ResponseEntity.ok(votacao))
                 .defaultIfEmpty(ResponseEntity.notFound().build());
     }
+
+//        return votacaoRepository.findById(votacao.getId())
+//                .flatMap( votacao1 -> {
+//                    return votacaoRepository.save(votacao);
+//                })
+//                .map(votacao1 -> ResponseEntity.ok(votacao))
+//                .defaultIfEmpty(ResponseEntity.notFound().build());
+
 
     public Mono<ResponseEntity<Void>> deletar(String id) {
         return votacaoRepository.findById(id)

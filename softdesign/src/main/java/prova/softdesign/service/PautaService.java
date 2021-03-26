@@ -5,6 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import prova.softdesign.document.Pauta;
 import prova.softdesign.interfaces.PautaServiceInterface;
+import prova.softdesign.repository.AssembleiaRepository;
 import prova.softdesign.repository.PautaRepository;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -15,9 +16,16 @@ public class PautaService implements PautaServiceInterface {
     @Autowired
     PautaRepository pautaRepository;
 
+    @Autowired
+    AssembleiaRepository assembleiaRepository;
+
     public Mono<ResponseEntity<Pauta>> cadastrar(Pauta pauta){
-        return pautaRepository.save(pauta)
-                .map(pauta1 -> ResponseEntity.ok(pauta));
+        return assembleiaRepository.findById(pauta.getId()).flatMap(assembleia -> {
+            pauta.setAssembleia(assembleia);
+            return pautaRepository.save(pauta)
+                    .map(pauta1 -> ResponseEntity.ok(pauta));
+        }).map(pauta1 -> ResponseEntity.ok(pauta))
+                .defaultIfEmpty(ResponseEntity.notFound().build());
     }
 
     public Flux<Pauta> buscarTodos() {

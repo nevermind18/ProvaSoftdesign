@@ -5,7 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import prova.softdesign.document.Assembleia;
 import prova.softdesign.interfaces.AssembleiaServiceInterface;
-import prova.softdesign.repository.AssembreiaRepository;
+import prova.softdesign.repository.AssembleiaRepository;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
@@ -13,7 +13,7 @@ import reactor.core.publisher.Mono;
 public class AssembleiaService implements AssembleiaServiceInterface {
 
     @Autowired
-    AssembreiaRepository assembreiaRepository;
+    AssembleiaRepository assembreiaRepository;
 
 
     public Mono<ResponseEntity<Assembleia>> cadastrar(Assembleia assembleia){

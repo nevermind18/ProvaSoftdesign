@@ -6,16 +6,16 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-@Setter
-@Getter
 @Document
-public class Pauta {
+@Getter
+@Setter
+public class Voto {
 
     @Id
     private String id;
-    private String nome;
-    private String assunto;
     @DBRef
-    private Assembleia assembleia;
-
+    private Associado associado;
+    @DBRef
+    private Votacao votacao;
+    private boolean voto;
 }
